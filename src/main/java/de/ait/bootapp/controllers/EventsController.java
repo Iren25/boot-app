@@ -1,5 +1,6 @@
 package de.ait.bootapp.controllers;
 
+import de.ait.bootapp.models.Event;
 import de.ait.bootapp.services.EventsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,12 @@ public class EventsController {
     private final EventsService eventsService;
 
     private List<String> words = new ArrayList<>();
-    private List<String> events = new ArrayList<>();
+    //private List<String> events = new ArrayList<>();
 
-    public EventsController(EventsService eventsService, List<String> words, List<String> events) {
+    public EventsController(EventsService eventsService, List<String> words) {
         this.eventsService = eventsService;
         this.words = words;
-        this.events = events;
+       // this.events = events;
     }
 
     @PostMapping("/words")
@@ -39,13 +40,25 @@ public class EventsController {
     @PostMapping("/events")
     public String addEvent(@RequestParam("name") String eventName,
                            @RequestParam("description") String description) {
-        events.add(eventName + ": " + description);
+        Event event = new Event(eventName, description);
+        eventsService.addEvent(eventName, description);
+        //event.add()
+
         return "redirect:/success_add_event.html";
     }
 
     @GetMapping("/events")
     public String getEventsPage(Model model) {
-        model.addAttribute("eventsList", events);
+        // Получаем список событий из репозитория через сервис
+        List<Event> eventsList = eventsService.getAllEvents();
+
+        model.addAttribute("eventsList", eventsList);
         return "events_page";
     }
+
+    //@GetMapping("/events")
+    //public String getEventsPage(Model model) {
+    //    model.addAttribute("eventsList", events);
+    //    return "events_page";
+    //}
 }

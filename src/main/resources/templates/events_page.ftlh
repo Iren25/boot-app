@@ -11,7 +11,7 @@
 <ul>
     <#list eventsList as event>
         <li>${event.name}</li>
-        <li>${description}</li>
+        <li>${event.description}</li>
     </#list>
 </ul>
 </body>
